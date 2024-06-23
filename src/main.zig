@@ -40,11 +40,11 @@ pub fn onLoad(win: *Win, state: *State) !Win.Action {
 }
 
 pub fn drawCanvasBackground(win: *Win, state: *State) void {
-    const canvas_width: f32 = @intToFloat(f32, state.canvas_width);
-    const canvas_height: f32 = @intToFloat(f32, state.canvas_height);
+    const canvas_width: f32 = @as(f32, state.canvas_width);
+    const canvas_height: f32 = @as(f32, state.canvas_height);
     cell_shader.bind();
-    cell_shader.setUniformVec2("window_size", @intToFloat(f32, win.window_size.width), @intToFloat(f32, win.window_size.height));
-    cell_shader.setUniformVec2("canvas_size", @intToFloat(f32, state.canvas_width), @intToFloat(f32, state.canvas_width));
+    cell_shader.setUniformVec2("window_size", @as(f32, win.window_size.width), @as(f32, win.window_size.height));
+    cell_shader.setUniformVec2("canvas_size", @as(f32, state.canvas_width), @as(f32, state.canvas_width));
     cell_shader.setUniformVec4("cell_spec", 0, 0, canvas_width, canvas_height);
     cell_shader.setUniformVec3("fg_color", 0.7, 0.7, 0.7);
     stamp.rectangle.render();
@@ -54,13 +54,13 @@ pub fn drawLayerList(win: *Win, state: *State) void {
     for (state.layer_list.items) |layer| {
         if (layer.is_visible) {
             for (layer.mark_list.items) |mark| {
-                const mark_width = @intToFloat(f32, state.canvas_width) / @intToFloat(f32, layer.width);
-                const mark_height = @intToFloat(f32, state.canvas_height) / @intToFloat(f32, layer.height);
-                const mark_x = @intToFloat(f32, mark.x);
-                const mark_y = @intToFloat(f32, mark.y);
+                const mark_width = @as(f32, state.canvas_width) / @as(f32, layer.width);
+                const mark_height = @as(f32, state.canvas_height) / @as(f32, layer.height);
+                const mark_x = @as(f32, mark.x);
+                const mark_y = @as(f32, mark.y);
                 cell_shader.bind();
-                cell_shader.setUniformVec2("window_size", @intToFloat(f32, win.window_size.width), @intToFloat(f32, win.window_size.height));
-                cell_shader.setUniformVec2("canvas_size", @intToFloat(f32, state.canvas_width), @intToFloat(f32, state.canvas_height));
+                cell_shader.setUniformVec2("window_size", @as(f32, win.window_size.width), @as(f32, win.window_size.height));
+                cell_shader.setUniformVec2("canvas_size", @as(f32, state.canvas_width), @as(f32, state.canvas_height));
                 cell_shader.setUniformVec4("cell_spec", mark_x, mark_y, mark_width, mark_height);
                 cell_shader.setUniformVec3("fg_color", mark.color.red, mark.color.green, mark.color.blue);
                 mark.stamp.draw();
@@ -71,13 +71,13 @@ pub fn drawLayerList(win: *Win, state: *State) void {
 
 pub fn drawCursor(win: *Win, state: *State) void {
     const current_layer = &state.layer_list.items[state.layer_index];
-    const cursor_width = @intToFloat(f32, state.canvas_width) / @intToFloat(f32, current_layer.width);
-    const cursor_height = @intToFloat(f32, state.canvas_height) / @intToFloat(f32, current_layer.height);
-    const cursor_x = @intToFloat(f32, state.cursor.x);
-    const cursor_y = @intToFloat(f32, state.cursor.y);
+    const cursor_width = @as(f32, state.canvas_width) / @as(f32, current_layer.width);
+    const cursor_height = @as(f32, state.canvas_height) / @as(f32, current_layer.height);
+    const cursor_x = @as(f32, state.cursor.x);
+    const cursor_y = @as(f32, state.cursor.y);
     cell_shader.bind();
-    cell_shader.setUniformVec2("window_size", @intToFloat(f32, win.window_size.width), @intToFloat(f32, win.window_size.height));
-    cell_shader.setUniformVec2("canvas_size", @intToFloat(f32, state.canvas_width), @intToFloat(f32, state.canvas_height));
+    cell_shader.setUniformVec2("window_size", @as(f32, win.window_size.width), @as(f32, win.window_size.height));
+    cell_shader.setUniformVec2("canvas_size", @as(f32, state.canvas_width), @as(f32, state.canvas_height));
     cell_shader.setUniformVec4("cell_spec", cursor_x, cursor_y, cursor_width, cursor_height);
     cell_shader.setUniformVec3("fg_color", 1.0, 0.141, 0.278);
     state.current_stamp.draw();
@@ -115,8 +115,8 @@ pub fn drawHud(win: *Win, state: *State) void {
 
     // draw selected stamp with selected color
     fixed_shader.bind();
-    fixed_shader.setUniformVec2("window_size", @intToFloat(f32, win.window_size.width), @intToFloat(f32, win.window_size.height));
-    fixed_shader.setUniformVec4("dimention", @intToFloat(f32, win.window_size.width - 120), @intToFloat(f32, win.window_size.height - 120), 100, 100);
+    fixed_shader.setUniformVec2("window_size", @as(f32, win.window_size.width), @as(f32, win.window_size.height));
+    fixed_shader.setUniformVec4("dimention", @as(f32, win.window_size.width - 120), @as(f32, win.window_size.height - 120), 100, 100);
     fixed_shader.setUniformVec3("fg_color", state.color.red, state.color.green, state.color.blue);
     state.current_stamp.draw();
 }
@@ -233,7 +233,7 @@ pub fn onKey(win: *Win, state: *State, key: Win.Key) !Win.Action {
 pub fn main() !void {
     info("all your paint are belong to triangle!\n", .{});
     var GPA = std.heap.GeneralPurposeAllocator(.{}){};
-    var allocator = GPA.allocator();
+    const allocator = GPA.allocator();
 
     var layer_list = LayerList.init(allocator);
     try layer_list.append(Layer{
@@ -260,7 +260,7 @@ pub fn main() !void {
         .mark_list = MarkList.init(allocator),
     });
 
-    var red_slider = Slider.init(.{
+    const red_slider = Slider.init(.{
         .origin_x = .Right,
         .origin_y = .Bottom,
         .width = 500,

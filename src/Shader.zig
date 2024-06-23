@@ -62,7 +62,7 @@ const BlockLocation = struct {
         return .{
             .begin = begin,
             .end = end,
-            .length = @intCast(c_int, end - begin),
+            .length = @as(c_int, end - begin),
         };
     }
 };
@@ -153,7 +153,7 @@ fn checkTroubleECompileShader(allocator: Allocator, name: []const u8, shader_id:
     if (is_success != gl.TRUE) {
         var log_length: c_int = undefined;
         gl.getShaderiv(shader_id, gl.INFO_LOG_LENGTH, &log_length);
-        var error_messsage: []u8 = allocator.alloc(u8, @intCast(usize, log_length)) catch |err| {
+        var error_messsage: []u8 = allocator.alloc(u8, @as(usize, log_length)) catch |err| {
             info("Error EOutOfMemory ({s})\n", .{name});
             return switch (err) {
                 Allocator.Error.OutOfMemory => Error.EOutOfMemory,
@@ -182,7 +182,7 @@ fn checkTroubleELinkProgram(allocator: Allocator, name: []const u8, program_id: 
     if (is_success != gl.TRUE) {
         var log_length: c_int = undefined;
         gl.getProgramiv(program_id, gl.INFO_LOG_LENGTH, &log_length);
-        var error_messsage: []u8 = allocator.alloc(u8, @intCast(usize, log_length)) catch |err| {
+        var error_messsage: []u8 = allocator.alloc(u8, @as(usize, log_length)) catch |err| {
             info("Error EOutOfMemory ({s})\n", .{name});
             return switch (err) {
                 Allocator.Error.OutOfMemory => Error.EOutOfMemory,

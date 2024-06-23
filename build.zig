@@ -10,11 +10,13 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
-    exe.addIncludePath("res/include");
-    exe.addLibraryPath("res/lib");
+
+    exe.addIncludePath(b.path("res/include"));
+    exe.addLibraryPath(b.path("res/lib"));
     exe.linkSystemLibrary("glfw3");
-    exe.linkSystemLibrary("X11");
-    exe.linkSystemLibrary("gl");
+    exe.linkFramework("OpenGL");
+    // exe.linkSystemLibrary("X11");
+    // exe.linkSystemLibrary("OpenGL");
     exe.linkLibC();
     b.installArtifact(exe);
     const run_cmd = b.addRunArtifact(exe);

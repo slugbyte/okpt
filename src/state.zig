@@ -200,17 +200,17 @@ pub const State = struct {
 
     pub fn layerNext(self: *State) void {
         const prev_layer = &self.layer_list.items[self.layer_index];
-        const prev_cursor_width = @divFloor(@intCast(i32, self.canvas_width), prev_layer.width);
-        const prev_cursor_height = @divFloor(@intCast(i32, self.canvas_height), prev_layer.height);
+        const prev_cursor_width = @divFloor(@as(i32, self.canvas_width), prev_layer.width);
+        const prev_cursor_height = @divFloor(@as(i32, self.canvas_height), prev_layer.height);
         const cursor_x_in_px = self.cursor.x * prev_cursor_width;
         const cursor_y_in_px = self.cursor.y * prev_cursor_height;
 
         // update current layer index to next layer
-        self.layer_index = @mod(self.layer_index + 1, @intCast(u32, self.layer_list.items.len));
+        self.layer_index = @mod(self.layer_index + 1, @as(u32, self.layer_list.items.len));
         const next_layer: *Layer = &self.layer_list.items[self.layer_index];
 
-        const cursor_width = @divFloor(@intCast(i32, self.canvas_width), next_layer.width);
-        const cursor_height = @divFloor(@intCast(i32, self.canvas_height), next_layer.height);
+        const cursor_width = @divFloor(@as(i32, self.canvas_width), next_layer.width);
+        const cursor_height = @divFloor(@as(i32, self.canvas_height), next_layer.height);
 
         self.cursor.x = std.math.clamp(@divFloor(cursor_x_in_px, cursor_width), 0, next_layer.width - 1);
         self.cursor.y = std.math.clamp(@divFloor(cursor_y_in_px, cursor_height), 0, next_layer.height - 1);

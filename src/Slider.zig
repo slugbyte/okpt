@@ -105,24 +105,24 @@ pub fn updateAndRender(self: *Self, window_size: WindowSize, mouse_state: MouseS
         self.is_active = true;
         const mouse_x_local = std.math.clamp(mouse_state.x - bar_x, 0, bar_width);
 
-        self.value = clamp(@intToFloat(f32, mouse_x_local) / @intToFloat(f32, bar_width), 0, 1.0);
+        self.value = clamp(@as(f32, mouse_x_local) / @as(f32, bar_width), 0, 1.0);
     } else {
         self.is_active = false;
     }
 
-    bar_width = @floatToInt(i32, @intToFloat(f32, bar_width) * self.value);
+    bar_width = @as(i32, @as(f32, bar_width) * self.value);
 
     // draw container
     shader.bind();
-    shader.setUniformVec2("window_size", @intToFloat(f32, window_size.width), @intToFloat(f32, window_size.height));
-    shader.setUniformVec4("dimention", @intToFloat(f32, container_x), @intToFloat(f32, container_y), @intToFloat(f32, self.width), @intToFloat(f32, self.height));
+    shader.setUniformVec2("window_size", @as(f32, window_size.width), @as(f32, window_size.height));
+    shader.setUniformVec4("dimention", @as(f32, container_x), @as(f32, container_y), @as(f32, self.width), @as(f32, self.height));
     shader.setUniformVec3("fg_color", self.bg_color[0], self.bg_color[1], self.bg_color[2]);
     Stamp.Rect.draw();
 
     // draw bar
     shader.bind();
-    shader.setUniformVec2("window_size", @intToFloat(f32, window_size.width), @intToFloat(f32, window_size.height));
-    shader.setUniformVec4("dimention", @intToFloat(f32, bar_x), @intToFloat(f32, bar_y), @intToFloat(f32, bar_width), @intToFloat(f32, bar_height));
+    shader.setUniformVec2("window_size", @as(f32, window_size.width), @as(f32, window_size.height));
+    shader.setUniformVec4("dimention", @as(f32, bar_x), @as(f32, bar_y), @as(f32, bar_width), @as(f32, bar_height));
     shader.setUniformVec3("fg_color", self.fg_color[0], self.fg_color[1], self.fg_color[2]);
     Stamp.Rect.draw();
 }

@@ -197,11 +197,11 @@ pub fn Window(comptime state: type) type {
                 return;
             }
 
-            var previous_time: f32 = @floatCast(f32, c.glfwGetTime());
-            var current_time: f32 = @floatCast(f32, c.glfwGetTime());
+            var previous_time: f32 = @as(f32, c.glfwGetTime());
+            var current_time: f32 = @as(f32, c.glfwGetTime());
 
             while (c.glfwWindowShouldClose(self.glfw_window) != 1) {
-                current_time = @floatCast(f32, c.glfwGetTime());
+                current_time = @as(f32, c.glfwGetTime());
                 self.delta_time = previous_time - current_time;
                 previous_time = current_time;
                 self.frame += 1;
@@ -225,8 +225,8 @@ pub fn Window(comptime state: type) type {
             var mouse_x: f64 = undefined;
             var mouse_y: f64 = undefined;
             c.glfwGetCursorPos(self.glfw_window, &mouse_x, &mouse_y);
-            self.mouse_state.x = @floatToInt(i32, mouse_x);
-            self.mouse_state.y = @floatToInt(i32, mouse_y);
+            self.mouse_state.x = @as(i32, mouse_x);
+            self.mouse_state.y = @as(i32, mouse_y);
         }
 
         fn updateWindowSize(self: *Self) void {
@@ -241,7 +241,7 @@ pub fn Window(comptime state: type) type {
                     if (!@field(self.key_state, field.name)) {
                         // info("[key press active] {s}\n", .{field.name});
                         @field(self.key_state, field.name) = true;
-                        result = try self.onKey(self, &self.state, @intToEnum(Key, field.value));
+                        result = try self.onKey(self, &self.state, @as(Key, field.value));
                     }
                 }
                 if (c.glfwGetKey(self.glfw_window, field.value) == c.GLFW_RELEASE) {
